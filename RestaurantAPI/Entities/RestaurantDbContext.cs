@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using RestaurantAPI.Data;
 
 namespace RestaurantAPI.Entities
 {
@@ -24,6 +25,11 @@ namespace RestaurantAPI.Entities
             modelBuilder.Entity<Dish>()
                 .Property(d => d.Name)
                 .IsRequired();
+
+            // Data Seed - but we use RestaurantSeeder
+            //modelBuilder.Entity<Restaurant>()
+            //    .HasData();
+            //new RestaurantSeeder(this).Seed();    // This way will add only when model is updating to the db
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
