@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RestaurantAPI.DTOs;
+using RestaurantAPI.Models;
 using RestaurantAPI.Services;
 
 namespace RestaurantAPI.Controllers
@@ -62,7 +63,7 @@ namespace RestaurantAPI.Controllers
         [HttpGet("generate2")]
         public ActionResult<IEnumerable<WeatherForecast>> Get([FromBody] WeatherRequestDTO dto)
         { 
-            var weather = _service.GetWithParams(dto.count, dto.minimum, dto.maximum);
+            var weather = _service.GetWithParams(dto.Count, dto.Minimum, dto.Maximum);
             if (weather != null)
             {
                 return StatusCode(200, weather);

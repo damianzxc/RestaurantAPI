@@ -1,4 +1,6 @@
 ﻿
+using RestaurantAPI.Models;
+
 namespace RestaurantAPI.Services
 {
     public interface IWeatherForecastService

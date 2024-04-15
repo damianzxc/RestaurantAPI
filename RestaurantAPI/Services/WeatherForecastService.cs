@@ -1,4 +1,6 @@
-﻿namespace RestaurantAPI.Services
+﻿using RestaurantAPI.Models;
+
+namespace RestaurantAPI.Services
 {
     public class WeatherForecastService : IWeatherForecastService
     {
