@@ -18,8 +18,10 @@
             .ToArray();
         }
 
-        public IEnumerable<WeatherForecast> GetWithParams(int count, int minimum, int maximum)
+        public IEnumerable<WeatherForecast>? GetWithParams(int count, int minimum, int maximum)
         {
+            if (count < 0 || minimum > maximum) return null;
+
             return Enumerable.Range(1, count).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
