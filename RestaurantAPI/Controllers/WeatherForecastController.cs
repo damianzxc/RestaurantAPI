@@ -9,7 +9,7 @@ namespace RestaurantAPI.Controllers
     {
         //private readonly WeatherForecastService _service;   // Strongly related dependency
         //Without strongly related (Dependency Inversion) -> using interfaces
-        private readonly IWeatherForecastService _service; 
+        private readonly IWeatherForecastService _service;
         private readonly ILogger<WeatherForecastController> _logger;
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger, IWeatherForecastService service)
@@ -27,20 +27,35 @@ namespace RestaurantAPI.Controllers
 
         [HttpGet]
         [Route("currentDay/{max}")]  // or[HttpGet("currentDay")]
-        public IEnumerable<WeatherForecast> Get2([FromQuery]int take, [FromRoute]int max)
+        public IEnumerable<WeatherForecast> Get2([FromQuery] int take, [FromRoute] int max)
         {
             return _service.Get();
         }
 
         [HttpPost]
-        public ActionResult<string> Hello([FromBody]string msg) 
+        public ActionResult<string> Hello([FromBody] string msg)
         {
             //Response.StatusCode = 401;    Won't work
             //return $"{msg}";
             return StatusCode(401, msg);
-            
+
             // Other option
             //return NotFound(msg);
+        }
+
+        // First excercise
+        [HttpGet("generate/{maximum}")]
+        public ActionResult<IEnumerable<WeatherForecast>> Get([FromBody]int count, [FromQuery]int minimum, [FromRoute]int maximum)
+        {
+            var weather = _service.GetWithParams(count, minimum, maximum);
+            if (weather != null)
+            {
+                return StatusCode(200, weather);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }

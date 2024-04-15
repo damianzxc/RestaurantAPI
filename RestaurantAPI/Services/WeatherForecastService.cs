@@ -17,5 +17,16 @@
             })
             .ToArray();
         }
+
+        public IEnumerable<WeatherForecast> GetWithParams(int count, int minimum, int maximum)
+        {
+            return Enumerable.Range(1, count).Select(index => new WeatherForecast
+            {
+                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+                TemperatureC = Random.Shared.Next(minimum, maximum),
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            }).ToArray();
+        }
+
     }
 }
