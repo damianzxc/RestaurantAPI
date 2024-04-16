@@ -33,7 +33,7 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Restaurant> Get([FromRoute]int id)
+        public ActionResult<Restaurant> Get([FromRoute] int id)
         {
             var restaurant = _db.Restaurants
                 .Include(r => r.Address)    // To add Address and Dishes table
@@ -43,11 +43,21 @@ namespace RestaurantAPI.Controllers
             {
                 return NotFound();
             }
-            
+
             var restaurantDto = _mapper.Map<RestaurantDto>(restaurant);
             {
                 return Ok(restaurantDto);
             }
+        }
+
+        [HttpPost("create")]
+        public ActionResult Post([FromBody] CreateRestaurantDto dto)
+        { 
+            var restaurant = _mapper.Map<Restaurant>(dto);
+            _db.Restaurants.Add(restaurant);
+            _db.SaveChanges();
+
+            return Created($"api/restaurant/{restaurant.ID}", null);
         }
     }
 }
