@@ -1,8 +1,12 @@
-﻿namespace RestaurantAPI.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace RestaurantAPI.DTOs
 {
     public class CreateRestaurantDto
     {
         // Basic properties because for adding Dishes we will create another DTO
+        [Required]
+        [MaxLength(25)]
         public string Name { get; set; }
         public string Description { get; set; }
         public string Category { get; set; }
@@ -11,7 +15,11 @@
         public string ContactNumber { get; set; }
 
         // Properties to add address
+        [Required]
+        [MaxLength(50)]
         public string City { get; set; }
+        [Required]
+        [MaxLength(50)]
         public string Street { get; set; }
         public string PostalCode { get; set; }
     }
