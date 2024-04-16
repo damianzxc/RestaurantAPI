@@ -1,3 +1,4 @@
+using RestaurantAPI.AutoMapper;
 using RestaurantAPI.Data;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Services;
@@ -16,6 +17,7 @@ builder.Services.AddTransient<IWeatherForecastService, WeatherForecastService>()
 // Add DbContext
 builder.Services.AddDbContext<RestaurantDbContext>();
 builder.Services.AddScoped<RestaurantSeeder>();
+builder.Services.AddAutoMapper(typeof(RestaurantMappingProfile));
 
 var app = builder.Build();
 
