@@ -12,7 +12,6 @@ builder.Services.AddControllers();
 // First option AddScoped<>() -> Each request will be a new service instance
 // Second option AddSingleton<>() -> Will create only single instance of service
 // Third option AddTransient<>() -> Will create instance at every Controller call method
-builder.Services.AddTransient<IWeatherForecastService, WeatherForecastService>();
 
 // Add DbContext
 builder.Services.AddDbContext<RestaurantDbContext>();

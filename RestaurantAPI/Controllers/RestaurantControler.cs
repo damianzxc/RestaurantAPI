@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using RestaurantAPI.DTOs;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Services;
