@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using RestaurantAPI.DTOs;
 using RestaurantAPI.Entities;
 
@@ -20,7 +18,7 @@ namespace RestaurantAPI.Services
             _logger = logger;
         }
 
-        public RestaurantDto GetById(int id)
+        public RestaurantDto? GetById(int id)
         {
             var restaurant = _dbContext
                 .Restaurants
@@ -58,7 +56,7 @@ namespace RestaurantAPI.Services
 
         public bool DeleteById(int id)
         {
-            _logger.LogWarning("Restaurant with id: {id} DELETE action invoked", id);
+            _logger.LogError("Restaurant with id: {id} DELETE action invoked", id);
 
             var restaurant = _dbContext
                 .Restaurants

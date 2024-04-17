@@ -2,6 +2,7 @@ using NLog.Web;
 using RestaurantAPI.AutoMapper;
 using RestaurantAPI.Data;
 using RestaurantAPI.Entities;
+using RestaurantAPI.Middleware;
 using RestaurantAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,12 +22,18 @@ builder.Services.AddScoped<RestaurantSeeder>();
 builder.Services.AddAutoMapper(typeof(RestaurantMappingProfile));
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 
+// Logger Middleware
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
+
 // Add NLog
-//builder.Logging.ClearProviders();
-//builder.Logging.SetMinimumLevel(LogLevel.Trace);
 builder.Host.UseNLog();
 
 var app = builder.Build();
+
+// Logger Middleware Registration (before UseHttpRedirection!)
+//app.UseErrorHandlingMiddleware(); (=> see Example with static class)
+app.UseMiddleware<ErrorHandlingMiddleware>();
+
 
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
@@ -37,7 +44,6 @@ app.UseEndpoints(endpoints =>
 {
     _ = endpoints.MapControllers();
 });
-
 
 app.MapControllers();
 
@@ -52,4 +58,5 @@ void SeedDatabase()
         dbInitializer.Seed();
     }
 }
+
 app.Run();
