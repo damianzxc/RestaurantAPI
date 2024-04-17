@@ -1,4 +1,6 @@
 ﻿
+using RestaurantAPI.Exceptions;
+
 namespace RestaurantAPI.Middleware
 {
     public class ErrorHandlingMiddleware : IMiddleware
@@ -11,17 +13,22 @@ namespace RestaurantAPI.Middleware
         }
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-			try
-			{
-				await next.Invoke(context);
-			}
-			catch (Exception e)
-			{
-                _logger.LogError(e, e.Message);		
+            try
+            {
+                await next.Invoke(context);
+            }
+            catch (NotFoundException nfe)
+            {
+                context.Response.StatusCode = 404;
+                await context.Response.WriteAsync(nfe.Message);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, e.Message);
 
                 context.Response.StatusCode = 500;
                 await context.Response.WriteAsync("Something went wrong");
-			}
+            }
         }
     }
 
