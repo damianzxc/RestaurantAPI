@@ -1,3 +1,4 @@
+using NLog.Web;
 using RestaurantAPI.AutoMapper;
 using RestaurantAPI.Data;
 using RestaurantAPI.Entities;
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
 
 // Register service
 // First option AddScoped<>() -> Each request will be a new service instance
@@ -18,6 +20,11 @@ builder.Services.AddDbContext<RestaurantDbContext>();
 builder.Services.AddScoped<RestaurantSeeder>();
 builder.Services.AddAutoMapper(typeof(RestaurantMappingProfile));
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+
+// Add NLog
+//builder.Logging.ClearProviders();
+//builder.Logging.SetMinimumLevel(LogLevel.Trace);
+builder.Host.UseNLog();
 
 var app = builder.Build();
 
