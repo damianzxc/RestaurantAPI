@@ -22,6 +22,9 @@ builder.Services.AddScoped<RestaurantSeeder>();
 builder.Services.AddAutoMapper(typeof(RestaurantMappingProfile));
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 
+// Swagger
+builder.Services.AddSwaggerGen();
+
 // Logger Middleware
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
@@ -34,9 +37,15 @@ var app = builder.Build();
 //app.UseErrorHandlingMiddleware(); (=> see Example with static class)
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
-
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
+
+// Use Swagger (before ruting and after usehttpredirection? => not tested)
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Restaurant API");   // Default link url
+});
 
 //app.UseAuthorization();
 app.UseRouting();
