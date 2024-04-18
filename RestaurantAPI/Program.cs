@@ -27,6 +27,7 @@ builder.Services.AddSwaggerGen();
 
 // Logger Middleware
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
+builder.Services.AddScoped<RequestTimeMeasure>();
 
 // Add NLog
 builder.Host.UseNLog();
@@ -36,6 +37,7 @@ var app = builder.Build();
 // Logger Middleware Registration (before UseHttpRedirection!)
 //app.UseErrorHandlingMiddleware(); (=> see Example with static class)
 app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseRequestTimeMeasure();
 
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
