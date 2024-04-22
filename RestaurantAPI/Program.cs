@@ -21,6 +21,7 @@ builder.Services.AddDbContext<RestaurantDbContext>();
 builder.Services.AddScoped<RestaurantSeeder>();
 builder.Services.AddAutoMapper(typeof(RestaurantMappingProfile));
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 // Swagger
 builder.Services.AddSwaggerGen();
