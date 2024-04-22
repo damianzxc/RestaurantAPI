@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RestaurantAPI.DTOs;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Services;
@@ -16,7 +17,8 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<RestaurantDto>> Get()
+        [Authorize]
+        public ActionResult<IEnumerable<RestaurantDto>> GetAll()
         {
             var restaurantsDto = _restaurantService.GetAll();
             return Ok(restaurantsDto);

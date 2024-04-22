@@ -49,8 +49,12 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Restaurant API");   // Default link url
 });
 
-//app.UseAuthorization();
+
 app.UseRouting();
+
+// Authorization (must be this place)
+app.UseAuthorization();
+
 app.UseEndpoints(endpoints =>
 {
     _ = endpoints.MapControllers();

@@ -11,6 +11,8 @@ namespace RestaurantAPI.Entities
         public DbSet<Restaurant> Restaurants { get; set;}
         public DbSet<Address> Addresses { get; set;}
         public DbSet<Dish> Dishes { get; set;}
+        public DbSet<User> Users { get; set;}
+        public DbSet<Role> Roles { get; set;}
 
         // Connection to the data base or additional config
 
@@ -35,6 +37,14 @@ namespace RestaurantAPI.Entities
                 .Property(a => a.City)
                 .IsRequired()
                 .HasMaxLength(50);
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.Email)
+                .IsRequired();
+
+            modelBuilder.Entity<Role>()
+                .Property(r => r.Name)
+                .IsRequired();
 
             // Data Seed - but we use RestaurantSeeder
             //modelBuilder.Entity<Restaurant>()
