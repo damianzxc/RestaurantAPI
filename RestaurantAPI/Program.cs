@@ -1,7 +1,11 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using NLog.Web;
 using RestaurantAPI.AutoMapper;
 using RestaurantAPI.Data;
+using RestaurantAPI.DTOs;
+using RestaurantAPI.DTOs.Validators;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Middleware;
 using RestaurantAPI.Services;
@@ -10,7 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-
+// 2. Add FluentValidation
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserDto>();    // Register Validators
+builder.Services.AddFluentValidationAutoValidation();                       // The same old MVC pipeline behavior
+builder.Services.AddFluentValidationClientsideAdapters();                   // For client side
 
 // Register service
 // First option AddScoped<>() -> Each request will be a new service instance
@@ -24,6 +31,8 @@ builder.Services.AddAutoMapper(typeof(RestaurantMappingProfile));
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+// Add FluentValidation
+builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 
 // Swagger
 builder.Services.AddSwaggerGen();
