@@ -17,13 +17,13 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public ActionResult<IEnumerable<RestaurantDto>> GetAll()
         {
             var restaurantsDto = _restaurantService.GetAll();
             return Ok(restaurantsDto);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public ActionResult<Restaurant> Get([FromRoute] int id)
         {

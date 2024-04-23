@@ -1,7 +1,9 @@
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
+using RestaurantAPI;
 using RestaurantAPI.AutoMapper;
 using RestaurantAPI.Data;
 using RestaurantAPI.DTOs;
@@ -9,8 +11,32 @@ using RestaurantAPI.DTOs.Validators;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Middleware;
 using RestaurantAPI.Services;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Authentication Settings obj
+
+var authenticationSettings = new AuthenticationSettings();
+builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
+
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "Bearer";
+    options.DefaultScheme = "Bearer";
+    options.DefaultChallengeScheme = "Bearer";
+}).AddJwtBearer(cfg =>
+{
+    cfg.RequireHttpsMetadata = false;   // Nie wymuszamy https
+    cfg.SaveToken = true;   // Info że token powinien zostać zapisany po stronie serwera
+    cfg.TokenValidationParameters = new TokenValidationParameters   // Validacja tokena
+    {
+        ValidIssuer = authenticationSettings.JwtIssuer,     // Wydawca danego tokenu
+        ValidAudience = authenticationSettings.JwtIssuer,   // Jakie podmioty mogą go używać (w obrębie 1 aplikacja wzkazujemy na siebie)
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),     // Klucz prywatny na podstawie appsettings.json
+    };
+});
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -50,6 +76,9 @@ var app = builder.Build();
 //app.UseErrorHandlingMiddleware(); (=> see Example with static class)
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseRequestTimeMeasure();
+
+// All request have to use authentication. Above UseHttpRecirection!
+app.UseAuthentication();
 
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
