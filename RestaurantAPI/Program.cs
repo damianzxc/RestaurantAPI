@@ -16,10 +16,11 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Authentication Settings obj
-
 var authenticationSettings = new AuthenticationSettings();
 builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
 
+// We can inject this obj to use as service
+builder.Services.AddSingleton(authenticationSettings);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -60,12 +61,12 @@ builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 // Add FluentValidation
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 
-// Swagger
-builder.Services.AddSwaggerGen();
-
 // Logger Middleware
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeMeasure>();
+
+// Swagger
+builder.Services.AddSwaggerGen();
 
 // Add NLog
 builder.Host.UseNLog();
@@ -94,7 +95,7 @@ app.UseSwaggerUI(c =>
 app.UseRouting();
 
 // Authorization (must be this place)
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {

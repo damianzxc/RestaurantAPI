@@ -23,7 +23,6 @@ namespace RestaurantAPI.Controllers
             return Ok(restaurantsDto);
         }
 
-        [Authorize]
         [HttpGet("{id}")]
         public ActionResult<Restaurant> Get([FromRoute] int id)
         {
