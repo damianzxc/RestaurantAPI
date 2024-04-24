@@ -8,6 +8,7 @@ namespace RestaurantAPI.Controllers
 {
     [Route("api/restaurants")]
     [ApiController]  // Auto Validate instead of => ( ModelState.IsValid)
+    [Authorize]
     public class RestaurantControler : ControllerBase
     {
         private readonly IRestaurantService _restaurantService;
@@ -17,6 +18,8 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpGet]
+        //[AllowAnonymous]
+        [Authorize(Policy = "HasNationality")]
         public ActionResult<IEnumerable<RestaurantDto>> GetAll()
         {
             var restaurantsDto = _restaurantService.GetAll();
@@ -45,6 +48,7 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Manager")]
         public ActionResult Delete([FromRoute] int id)
         {
             _restaurantService.DeleteById(id);

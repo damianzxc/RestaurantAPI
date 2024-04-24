@@ -39,6 +39,12 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Own Authorization
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality"));
+});
+
 // Add services to the container.
 builder.Services.AddControllers();
 // 2. Add FluentValidation
@@ -95,7 +101,7 @@ app.UseSwaggerUI(c =>
 app.UseRouting();
 
 // Authorization (must be this place)
-//app.UseAuthorization();
+app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
