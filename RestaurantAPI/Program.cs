@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
 using RestaurantAPI;
+using RestaurantAPI.Authorization;
 using RestaurantAPI.AutoMapper;
 using RestaurantAPI.Data;
 using RestaurantAPI.DTOs;
@@ -41,9 +43,14 @@ builder.Services.AddAuthentication(options =>
 
 // Own Authorization
 builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality"));
+{                                                                       // Claim nationality with value France or Polish
+    options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality", "France", "Polish"));
+
+    // How to add own policy (this policy prevent users with age below 20 to access)
+    options.AddPolicy("AddLeast20", builder => builder.AddRequirements(new MinimumAgeRequired(20)));
 });
+builder.Services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
+
 
 // Add services to the container.
 builder.Services.AddControllers();
