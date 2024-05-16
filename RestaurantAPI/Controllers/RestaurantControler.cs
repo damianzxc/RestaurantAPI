@@ -53,14 +53,14 @@ namespace RestaurantAPI.Controllers
         [Authorize(Roles = "Admin,Manager")]
         public ActionResult Delete([FromRoute] int id)
         {
-            _restaurantService.DeleteById(id);
+            _restaurantService.DeleteById(id, User);
             return NoContent();
         }
 
         [HttpPut("{id}")]
         public ActionResult Update([FromRoute] int id, [FromBody] UpdateRestaurantDto dto)
         { 
-            _restaurantService.UpdateById(id, dto);
+            _restaurantService.UpdateById(id, dto, User);
             return Ok();
         }
     }

@@ -61,13 +61,21 @@ namespace RestaurantAPI.Services
             return restaurant.ID;
         }
 
-        public void DeleteById(int id)
+        public void DeleteById(int id, ClaimsPrincipal user)
         {
             _logger.LogError("Restaurant with id: {id} DELETE action invoked", id);
 
             var restaurant = _dbContext
                 .Restaurants
                 .FirstOrDefault(r => r.ID == id) ?? throw new NotFoundException("Restaurant not found");
+
+            var authorizationResult = _authorizationService.AuthorizeAsync(user, restaurant,
+                new ResourcesOperationRequirement(ResourceOperation.Delete)).Result;
+
+            if (!authorizationResult.Succeeded)
+            {
+                throw new ForbidException();
+            }
 
             _dbContext.Restaurants.Remove(restaurant);
             _dbContext.SaveChanges();
