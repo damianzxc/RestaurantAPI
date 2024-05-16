@@ -24,6 +24,7 @@ namespace RestaurantAPI.Services
             _mapper = mapper;
             _logger = logger;
             _authorizationService = authorizationService;
+            _userContextService = userContextService;
         }
 
         public RestaurantDto GetById(int id)

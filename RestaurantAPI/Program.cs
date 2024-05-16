@@ -48,9 +48,13 @@ builder.Services.AddAuthorization(options =>
 
     // How to add own policy (this policy prevent users with age below 20 to access)
     options.AddPolicy("AddLeast20", builder => builder.AddRequirements(new MinimumAgeRequired(20)));
+
+    // At least 2
+    options.AddPolicy("CreatedAtLeast2Restaurants", builder => builder.AddRequirements(new CreatedMultipleRestaurantsRequirement(2)));
 });
 builder.Services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequrementHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, CreatedMultipleRestaurantsRequirementHandler>();
 
 
 // Add services to the container.
