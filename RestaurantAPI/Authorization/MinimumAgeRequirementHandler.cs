@@ -15,10 +15,10 @@ namespace RestaurantAPI.Authorization
             var dateOfBirth = DateTime.Parse(context.User.FindFirst(c => c.Type == "DateOfBirth")?.Value);
 
             // ILogger info
-            var userEmail = context.User.FindFirst(c => c.Type == "DateOfBirth")?.Value;
+            var userEmail = context.User.FindFirst(c => c.Type == "Email")?.Value;
             _logger.LogInformation($"User: {userEmail} with date of birth [{dateOfBirth}]");
 
-            if (dateOfBirth.AddYears(requirement.MinimumAge) > DateTime.Today)
+            if (dateOfBirth.AddYears(requirement.MinimumAge) <= DateTime.Today)
             { 
                 context.Succeed(requirement);
                 _logger.LogInformation("Authorization succedded");
