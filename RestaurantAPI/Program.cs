@@ -79,6 +79,10 @@ builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeMeasure>();
 
+// UserContextService - User object propagation [Context accessor]
+builder.Services.AddScoped<IUserContextService, UserContextService>();
+builder.Services.AddHttpContextAccessor();
+
 // Swagger
 builder.Services.AddSwaggerGen();
 

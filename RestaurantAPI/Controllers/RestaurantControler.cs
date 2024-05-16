@@ -38,29 +38,22 @@ namespace RestaurantAPI.Controllers
         [HttpPost("create")]
         public ActionResult Post([FromBody] CreateRestaurantDto dto)
         {
-            // Validation (ex. Restaurant name should have max 25 chars)
-            //if (dto.Name.Length > 25)... but better add annotation on CreateRestaurantDTO class
-            //if (!ModelState.IsValid)
-            //{ 
-            //    return BadRequest(ModelState);
-            //}
-            var userId = int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            var id = _restaurantService.Create(dto, userId);
+            var id = _restaurantService.Create(dto);
             return Created($"api/restaurants/{id}", null);
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin,Manager")]
         public ActionResult Delete([FromRoute] int id)
         {
-            _restaurantService.DeleteById(id, User);
+            _restaurantService.DeleteById(id);
             return NoContent();
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Manager")]
         public ActionResult Update([FromRoute] int id, [FromBody] UpdateRestaurantDto dto)
         { 
-            _restaurantService.UpdateById(id, dto, User);
+            _restaurantService.UpdateById(id, dto);
             return Ok();
         }
     }
