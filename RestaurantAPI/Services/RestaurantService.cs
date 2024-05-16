@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using RestaurantAPI.Authorization;
 using RestaurantAPI.DTOs;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Exceptions;
+using System.Security.Claims;
 
 namespace RestaurantAPI.Services
 {
@@ -11,12 +14,15 @@ namespace RestaurantAPI.Services
         private readonly RestaurantDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly ILogger<RestaurantService> _logger;
+        private readonly IAuthorizationService _authorizationService;
 
-        public RestaurantService(RestaurantDbContext dbContext, IMapper mapper, ILogger<RestaurantService> logger)
+        public RestaurantService(RestaurantDbContext dbContext, IMapper mapper, ILogger<RestaurantService> logger,
+            IAuthorizationService authorizationService)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _logger = logger;
+            _authorizationService = authorizationService;
         }
 
         public RestaurantDto GetById(int id)
@@ -45,9 +51,10 @@ namespace RestaurantAPI.Services
             return restaurantsDto;
         }
 
-        public int Create(CreateRestaurantDto dto)
+        public int Create(CreateRestaurantDto dto, int userId)
         {
             var restaurant = _mapper.Map<Restaurant>(dto);
+            restaurant.CreatedById = userId;
             _dbContext.Add(restaurant);
             _dbContext.SaveChanges();
 
@@ -66,12 +73,20 @@ namespace RestaurantAPI.Services
             _dbContext.SaveChanges();
         }
 
-        public void UpdateById(int id, UpdateRestaurantDto dto)
+        public void UpdateById(int id, UpdateRestaurantDto dto, ClaimsPrincipal user)
         {
+
             var restaurant = _dbContext
                 .Restaurants
                 .FirstOrDefault(r => r.ID == id) ?? throw new NotFoundException("Restaurant not found");
 
+            var authorizationResult = _authorizationService.AuthorizeAsync(user, restaurant, 
+                new ResourcesOperationRequirement(ResourceOperation.Update)).Result;
+
+            if(!authorizationResult.Succeeded) 
+            {
+                throw new ForbidException();
+            }
 
             restaurant.Name = dto.Name;
             restaurant.Description = dto.Description;

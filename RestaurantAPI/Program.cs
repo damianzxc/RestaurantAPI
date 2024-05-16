@@ -50,6 +50,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AddLeast20", builder => builder.AddRequirements(new MinimumAgeRequired(20)));
 });
 builder.Services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequrementHandler>();
 
 
 // Add services to the container.
