@@ -52,7 +52,7 @@ namespace RestaurantAPI.Controllers
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin,Manager")]
         public ActionResult Update([FromRoute] int id, [FromBody] UpdateRestaurantDto dto)
-        { 
+        {
             _restaurantService.UpdateById(id, dto);
             return Ok();
         }

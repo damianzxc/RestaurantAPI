@@ -20,6 +20,7 @@ namespace RestaurantAPI.Middleware
             catch (ForbidException forbidException)
             {
                 context.Response.StatusCode = 403;
+                await context.Response.WriteAsync(forbidException.Message);
             }
             catch (BadRequestException badRequest)
             {
@@ -33,7 +34,7 @@ namespace RestaurantAPI.Middleware
             }
             catch (Exception e)
             {
-                _logger.LogError(e, e.Message);
+                _logger.LogError("{Message}", e.Message);
 
                 context.Response.StatusCode = 500;
                 await context.Response.WriteAsync("Something went wrong");
