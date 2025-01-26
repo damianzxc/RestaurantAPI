@@ -4,7 +4,7 @@ namespace RestaurantAPI.Services
 {
     public interface IUserContextService
     {
-        ClaimsPrincipal User { get; }
+        ClaimsPrincipal? User { get; }
         int? GetUserId { get; }
     }
 
@@ -16,7 +16,8 @@ namespace RestaurantAPI.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public ClaimsPrincipal User => _httpContextAccessor.HttpContext?.User;
-        public int? GetUserId => User is null ? null : int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+        public ClaimsPrincipal? User => _httpContextAccessor.HttpContext?.User;
+        public int? GetUserId => User is null ? null : int.Parse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+        //public int? GetUserId => User is null ? null : (int.TryParse(User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out var v) ? v : null);
     }
 }
