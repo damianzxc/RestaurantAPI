@@ -40,7 +40,7 @@ namespace RestaurantAPI.Services
             return result;
         }
 
-        public IEnumerable<RestaurantDto> GetAll(string searchPhrase)
+        public IEnumerable<RestaurantDto> GetAll(string? searchPhrase)
         {
             var restaurants = _dbContext
                 .Restaurants
