@@ -28,7 +28,7 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Policy = "AddLeast20")]
+        [Authorize(Policy = "AtLeast20")]
         public ActionResult<Restaurant> Get([FromRoute] int id)
         {
             var restaurant = _restaurantService.GetById(id);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RestaurantAPI.DTOs;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Services;
@@ -7,6 +8,7 @@ namespace RestaurantAPI.Controllers
 {
     [Route("api/restaurants/{restaurantId}/dish")]
     [ApiController]
+    [Authorize]
     public class DishController : ControllerBase
     {
         private readonly IDishService _service;

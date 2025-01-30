@@ -47,7 +47,7 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality", "France", "Polish"));
 
     // How to add own policy (this policy prevent users with age below 20 to access)
-    options.AddPolicy("AddLeast20", builder => builder.AddRequirements(new MinimumAgeRequired(20)));
+    options.AddPolicy("AtLeast20", builder => builder.AddRequirements(new MinimumAgeRequired(20)));
 
     // At least 2
     options.AddPolicy("CreatedAtLeast2Restaurants", builder => builder.AddRequirements(new CreatedMultipleRestaurantsRequirement(2)));

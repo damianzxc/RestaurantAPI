@@ -24,7 +24,7 @@ namespace RestaurantAPI.Middleware
             if (!authorizeResult.Succeeded)
             {
                 // Return a 401 Unauthorized
-                context.Response.StatusCode = StatusCodes.Status402PaymentRequired;
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return;
             }
 
