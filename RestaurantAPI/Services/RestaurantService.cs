@@ -40,12 +40,15 @@ namespace RestaurantAPI.Services
             return result;
         }
 
-        public IEnumerable<RestaurantDto> GetAll()
+        public IEnumerable<RestaurantDto> GetAll(string searchPhrase)
         {
             var restaurants = _dbContext
                 .Restaurants
                 .Include(r => r.Address)
                 .Include(r => r.Dishes)
+                .Where(r => searchPhrase == null ||
+                    (r.Name.ToUpper().Contains(searchPhrase.ToUpper()) || 
+                    r.Description.ToUpper().Contains(searchPhrase.ToUpper())))
                 .ToList();
 
             var restaurantsDto = _mapper.Map<List<RestaurantDto>>(restaurants);

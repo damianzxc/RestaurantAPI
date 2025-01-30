@@ -21,9 +21,9 @@ namespace RestaurantAPI.Controllers
         [HttpGet]
         //[AllowAnonymous]
         //[Authorize(Policy = "CreatedAtLeast2Restaurants")]
-        public ActionResult<IEnumerable<RestaurantDto>> GetAll()
+        public ActionResult<IEnumerable<RestaurantDto>> GetAll([FromQuery] string searchPhrase = null)
         {
-            var restaurantsDto = _restaurantService.GetAll();
+            var restaurantsDto = _restaurantService.GetAll(searchPhrase);
             return Ok(restaurantsDto);
         }
 
