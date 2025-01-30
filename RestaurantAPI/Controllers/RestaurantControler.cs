@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RestaurantAPI.DTOs;
 using RestaurantAPI.Entities;
+using RestaurantAPI.Models;
 using RestaurantAPI.Services;
 using System.Security.Claims;
 
@@ -21,9 +22,9 @@ namespace RestaurantAPI.Controllers
         [HttpGet]
         //[AllowAnonymous]
         //[Authorize(Policy = "CreatedAtLeast2Restaurants")]
-        public ActionResult<IEnumerable<RestaurantDto>> GetAll([FromQuery] string? searchPhrase)
+        public ActionResult<PagedResult<RestaurantDto>> GetAll([FromBody]RestaurantQuery query)
         {
-            var restaurantsDto = _restaurantService.GetAll(searchPhrase);
+            var restaurantsDto = _restaurantService.GetAll(query);
             return Ok(restaurantsDto);
         }
 

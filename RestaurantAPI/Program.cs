@@ -12,6 +12,8 @@ using RestaurantAPI.DTOs;
 using RestaurantAPI.DTOs.Validators;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Middleware;
+using RestaurantAPI.Models;
+using RestaurantAPI.Models.Validators;
 using RestaurantAPI.Services;
 using System.Text;
 
@@ -80,6 +82,8 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 // Add FluentValidation
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+// RestaurantQuery validation (page number must be positive number from 1)
+builder.Services.AddScoped<IValidator<RestaurantQuery>, RestaurantQueryValidator>();
 
 // Logger Middleware
 builder.Services.AddScoped<ErrorHandlingMiddleware>();

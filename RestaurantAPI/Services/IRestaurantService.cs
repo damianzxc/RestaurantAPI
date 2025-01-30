@@ -1,5 +1,6 @@
-﻿using RestaurantAPI.DTOs;
-using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using RestaurantAPI.DTOs;
+using RestaurantAPI.Models;
 
 namespace RestaurantAPI.Services
 {
@@ -7,7 +8,7 @@ namespace RestaurantAPI.Services
     {
         int Create(CreateRestaurantDto dto);
         void DeleteById(int id);
-        IEnumerable<RestaurantDto> GetAll(string? searchPhrase);
+        PagedResult<RestaurantDto> GetAll(RestaurantQuery query);
         RestaurantDto? GetById(int id);
         void UpdateById(int id, UpdateRestaurantDto dto);
     }
