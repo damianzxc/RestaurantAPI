@@ -6,6 +6,7 @@ using RestaurantAPI.DTOs;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Exceptions;
 using RestaurantAPI.Models;
+using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace RestaurantAPI.Services
@@ -50,6 +51,21 @@ namespace RestaurantAPI.Services
                 .Where(r => query.SearchPhrase == null
                     || r.Name.ToUpper().Contains(query.SearchPhrase.ToUpper())
                     || r.Description.ToUpper().Contains(query.SearchPhrase.ToUpper()));
+
+            if (!string.IsNullOrEmpty(query.SortBy))
+            {
+                var columnsDictionary = new Dictionary<string, Expression<Func<Restaurant, object?>>>
+                {
+                    { nameof(Restaurant.Name), r => r.Name },
+                    { nameof(Restaurant.Description), r => r.Description },
+                    { nameof(Restaurant.Category), r => r.Category }
+                };
+
+                var keySelector = columnsDictionary.First(k => k.Key.Equals(query.SortBy)).Value;
+
+                baseQuery = query.SortDirection is SortDirection.ASCENDING ? baseQuery.OrderBy(keySelector)
+                    : baseQuery.OrderByDescending(keySelector);
+            }
 
             var restaurants = baseQuery
                 .Skip(query.PageSize * (query.PageNumber - 1))
