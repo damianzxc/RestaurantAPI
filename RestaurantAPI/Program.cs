@@ -96,10 +96,26 @@ builder.Services.AddHttpContextAccessor();
 // Swagger
 builder.Services.AddSwaggerGen();
 
+// CORS
+string allowedOrigins = string.Empty;
+builder.Configuration.GetSection("AllowedOrigins").Bind(allowedOrigins);
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontEndClient", builder =>
+    {
+        builder.AllowAnyMethod()
+        .AllowAnyHeader()
+        .WithOrigins(allowedOrigins);
+    });
+});
+
 // Add NLog
 builder.Host.UseNLog();
 
 var app = builder.Build();
+
+// CORS
+app.UseCors("FrontEndClient");
 
 // Logger Middleware Registration (before UseHttpRedirection!)
 //app.UseErrorHandlingMiddleware(); (=> see Example with static class)
