@@ -12,6 +12,7 @@ namespace RestaurantAPI.Controllers
         private readonly static string _privateDirecotryName = "PrivateFiles";
 
         [HttpGet]
+        [ResponseCache(VaryByQueryKeys = new[] { "fileName"}, Duration =1200)]
         public IActionResult GetFile([FromQuery] string fileName)
         {
             if (string.IsNullOrEmpty(fileName))

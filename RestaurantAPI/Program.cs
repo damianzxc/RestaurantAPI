@@ -116,12 +116,15 @@ builder.Host.UseNLog();
 
 var app = builder.Build();
 
-// CORS
-app.UseCors("FrontEndClient");
+// File cashing in browser
+app.UseResponseCaching();
 
 // Static files -> app can use files form folder wwwroot
 // It's important to add this line at the beginning to not share static files with API
 app.UseStaticFiles();
+
+// CORS
+app.UseCors("FrontEndClient");
 
 // Logger Middleware Registration (before UseHttpRedirection!)
 //app.UseErrorHandlingMiddleware(); (=> see Example with static class)
