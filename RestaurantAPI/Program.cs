@@ -11,11 +11,13 @@ using RestaurantAPI.Data;
 using RestaurantAPI.DTOs;
 using RestaurantAPI.DTOs.Validators;
 using RestaurantAPI.Entities;
+using RestaurantAPI.Exceptions;
 using RestaurantAPI.Middleware;
 using RestaurantAPI.Models;
 using RestaurantAPI.Models.Validators;
 using RestaurantAPI.Services;
 using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -97,17 +99,17 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen();
 
 // CORS
-string allowedOrigins = string.Empty;
-builder.Configuration.GetSection("AllowedOrigins").Bind(allowedOrigins);
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("FrontEndClient", builder =>
+string[]? allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+if (allowedOrigins is not null)
+    builder.Services.AddCors(options =>
     {
-        builder.AllowAnyMethod()
-        .AllowAnyHeader()
-        .WithOrigins(allowedOrigins);
+        options.AddPolicy("FrontEndClient", builder =>
+        {
+            builder.AllowAnyMethod()
+            .AllowAnyHeader()
+            .WithOrigins(allowedOrigins);
+        });
     });
-});
 
 // Add NLog
 builder.Host.UseNLog();
@@ -116,6 +118,10 @@ var app = builder.Build();
 
 // CORS
 app.UseCors("FrontEndClient");
+
+// Static files -> app can use files form folder wwwroot
+// It's important to add this line at the beginning to not share static files with API
+app.UseStaticFiles();
 
 // Logger Middleware Registration (before UseHttpRedirection!)
 //app.UseErrorHandlingMiddleware(); (=> see Example with static class)
