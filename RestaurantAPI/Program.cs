@@ -2,6 +2,7 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NLog.Web;
 using RestaurantAPI;
@@ -75,7 +76,11 @@ builder.Services.AddFluentValidationClientsideAdapters();                   // F
 // Third option AddTransient<>() -> Will create instance at every Controller call method
 
 // Add DbContext
-builder.Services.AddDbContext<RestaurantDbContext>();
+//builder.Services.AddDbContext<RestaurantDbContext>();
+// Changed dbContext to use connection string from appsettings.json
+builder.Services.AddDbContext<RestaurantDbContext>(options 
+    => options.UseSqlServer(builder.Configuration.GetConnectionString("RestaurantDbConnection")));
+
 builder.Services.AddScoped<RestaurantSeeder>();
 builder.Services.AddAutoMapper(typeof(RestaurantMappingProfile));
 builder.Services.AddScoped<IRestaurantService, RestaurantService>();

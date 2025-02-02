@@ -1,4 +1,5 @@
-﻿using RestaurantAPI.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantAPI.Entities;
 
 namespace RestaurantAPI.Data
 {
@@ -16,6 +17,13 @@ namespace RestaurantAPI.Data
         {
             if (_dbContext.Database.CanConnect())
             {
+                // update all not updated migrations
+                var pendingMigrations = _dbContext.Database.GetPendingMigrations();
+                if (pendingMigrations?.Any() is true)
+                {
+                    _dbContext.Database.Migrate();
+                }
+
                 if (!_dbContext.Restaurants.Any())
                 {
                     var restaurants = GetRestaurants();
