@@ -12,23 +12,28 @@ using RestaurantAPI.Data;
 using RestaurantAPI.DTOs;
 using RestaurantAPI.DTOs.Validators;
 using RestaurantAPI.Entities;
-using RestaurantAPI.Exceptions;
 using RestaurantAPI.Middleware;
 using RestaurantAPI.Models;
 using RestaurantAPI.Models.Validators;
 using RestaurantAPI.Services;
 using System.Text;
-using System.Threading.RateLimiting;
 
+#region Create Web Host
 var builder = WebApplication.CreateBuilder(args);
 
-// Authentication Settings obj
+// NLog: Setup NLog for Dependency injection
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
+
+#endregion
+
+#region Configure Services (DI)
+
+// Authentication Settings
 var authenticationSettings = new AuthenticationSettings();
 builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
 
-// We can inject this obj to use as service
 builder.Services.AddSingleton(authenticationSettings);
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = "Bearer";
@@ -36,48 +41,36 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = "Bearer";
 }).AddJwtBearer(cfg =>
 {
-    cfg.RequireHttpsMetadata = false;   // Nie wymuszamy https
-    cfg.SaveToken = true;   // Info że token powinien zostać zapisany po stronie serwera
-    cfg.TokenValidationParameters = new TokenValidationParameters   // Validacja tokena
+    cfg.RequireHttpsMetadata = false;   // Don't enforce HTTPS
+    cfg.SaveToken = true;   // Token should be stored on the server side.
+    cfg.TokenValidationParameters = new TokenValidationParameters   // Token validation
     {
-        ValidIssuer = authenticationSettings.JwtIssuer,     // Wydawca danego tokenu
-        ValidAudience = authenticationSettings.JwtIssuer,   // Jakie podmioty mogą go używać (w obrębie 1 aplikacja wzkazujemy na siebie)
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),     // Klucz prywatny na podstawie appsettings.json
+        ValidIssuer = authenticationSettings.JwtIssuer,     // Token publisher
+        ValidAudience = authenticationSettings.JwtIssuer,   // Entities that can use token (within a single app, refer to ourselves)
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey)),     // Private key -> appsettings.json
     };
 });
 
-// Own Authorization
-builder.Services.AddAuthorization(options =>
-{                                                                       // Claim nationality with value France or Polish
-    options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality", "France", "Polish"));
+// Own Authorization Policies
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality", "France", "Polish"))
+    .AddPolicy("AtLeast20", builder => builder.AddRequirements(new MinimumAgeRequired(20)))
+    .AddPolicy("CreatedAtLeast2Restaurants", builder => builder.AddRequirements(new CreatedMultipleRestaurantsRequirement(2)));
 
-    // How to add own policy (this policy prevent users with age below 20 to access)
-    options.AddPolicy("AtLeast20", builder => builder.AddRequirements(new MinimumAgeRequired(20)));
-
-    // At least 2
-    options.AddPolicy("CreatedAtLeast2Restaurants", builder => builder.AddRequirements(new CreatedMultipleRestaurantsRequirement(2)));
-});
 builder.Services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, ResourceOperationRequrementHandler>();
 builder.Services.AddScoped<IAuthorizationHandler, CreatedMultipleRestaurantsRequirementHandler>();
 builder.Services.AddScoped<IAuthorizationMiddlewareResultHandler, AuthorizationResultMiddleware>();
 
-
 // Add services to the container.
 builder.Services.AddControllers();
-// 2. Add FluentValidation
+
+// FluentValidation
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterUserDto>();    // Register Validators
 builder.Services.AddFluentValidationAutoValidation();                       // The same old MVC pipeline behavior
 builder.Services.AddFluentValidationClientsideAdapters();                   // For client side
 
-// Register service
-// First option AddScoped<>() -> Each request will be a new service instance
-// Second option AddSingleton<>() -> Will create only single instance of service
-// Third option AddTransient<>() -> Will create instance at every Controller call method
-
 // Add DbContext
-//builder.Services.AddDbContext<RestaurantDbContext>();
-// Changed dbContext to use connection string from appsettings.json
 builder.Services.AddDbContext<RestaurantDbContext>(options 
     => options.UseSqlServer(builder.Configuration.GetConnectionString("RestaurantDbConnection")));
 
@@ -87,12 +80,12 @@ builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddScoped<IDishService, DishService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-// Add FluentValidation
+
+// FluentValidation - register validators
 builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
-// RestaurantQuery validation (page number must be positive number from 1)
 builder.Services.AddScoped<IValidator<RestaurantQuery>, RestaurantQueryValidator>();
 
-// Logger Middleware
+// Middlewares
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<RequestTimeMeasure>();
 
@@ -116,9 +109,10 @@ if (allowedOrigins is not null)
         });
     });
 
-// Add NLog
-builder.Host.UseNLog();
 
+#endregion
+
+#region Create Middlewares
 var app = builder.Build();
 
 // File cashing in browser
@@ -142,13 +136,12 @@ app.UseAuthentication();
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
 
-// Use Swagger (before ruting and after usehttpredirection? => not tested)
+// Swagger configuration
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Restaurant API");   // Default link url
 });
-
 
 app.UseRouting();
 
@@ -161,8 +154,9 @@ app.UseEndpoints(endpoints =>
 });
 
 app.MapControllers();
+#endregion
 
-// Seed Database cont.
+#region Database Seeder
 SeedDatabase();
 
 void SeedDatabase()
@@ -173,5 +167,7 @@ void SeedDatabase()
         dbInitializer.Seed();
     }
 }
+
+#endregion
 
 app.Run();
