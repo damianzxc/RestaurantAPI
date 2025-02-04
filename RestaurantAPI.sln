@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantAPI", "RestaurantAPI\RestaurantAPI.csproj", "{EA1DA781-7897-4177-B5F7-ECCE68FB207D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantAPI_IntegrationTests", "RestaurantAPI_IntegrationTests\RestaurantAPI_IntegrationTests.csproj", "{C9FDF990-58C8-47EB-8B22-3119DB79AA51}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{EA1DA781-7897-4177-B5F7-ECCE68FB207D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA1DA781-7897-4177-B5F7-ECCE68FB207D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA1DA781-7897-4177-B5F7-ECCE68FB207D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9FDF990-58C8-47EB-8B22-3119DB79AA51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9FDF990-58C8-47EB-8B22-3119DB79AA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9FDF990-58C8-47EB-8B22-3119DB79AA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9FDF990-58C8-47EB-8B22-3119DB79AA51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
