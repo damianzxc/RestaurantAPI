@@ -20,8 +20,5 @@
     <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
-	<ItemGroup>
-		<InternalsVisibleTo Include="RestaurantAPI_IntegrationTests"/>
-	</ItemGroup>
 
 </Project>

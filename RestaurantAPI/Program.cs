@@ -171,3 +171,6 @@ void SeedDatabase()
 #endregion
 
 app.Run();
+
+// XUnit Inconsistent accessibility -> https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-9.0
+public partial class Program { }
