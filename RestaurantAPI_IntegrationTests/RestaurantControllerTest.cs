@@ -5,10 +5,12 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using RestaurantAPI.DTOs;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Models;
 using System.Data.Common;
+using System.Text;
 
 namespace RestaurantAPI_IntegrationTests
 {
@@ -39,10 +41,10 @@ namespace RestaurantAPI_IntegrationTests
 
         [Theory]
         [MemberData(nameof(ValidQueryData))]
-        public async Task GetAllRestaurants_WithRestaurantQuery_ReturnsOkResult(RestaurantQuery query)
+        public async Task GetAllRestaurants_WithRestaurantQuery_ReturnsOkResult(string query)
         {
             // Act
-            var response = await _httpClient.GetAsync("/api/restaurant?" + query);
+            var response = await _httpClient.GetAsync("/api/restaurants?" + query); // It's not good practice to pass body parameter with GET
 
             // Assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -52,9 +54,11 @@ namespace RestaurantAPI_IntegrationTests
         {
             get
             {
-                yield return new object[] { new RestaurantQuery() { SearchPhrase = "KFC", PageNumber = 1, PageSize = 2, SortBy = "Name" } };
-                yield return new object[] { new RestaurantQuery() { SearchPhrase = "KFC", PageNumber = 1, PageSize = 3, SortBy = "Name" } };
-                yield return new object[] { new RestaurantQuery() { SearchPhrase = "PizzaHut", PageNumber = 1, PageSize = 5, SortBy = "Name" } };
+                yield return new object[] { "PageNumber=1&PageSize=5&SortBy=Category" };
+                yield return new object[] { "PageNumber=2&PageSize=10&SortBy=Category" };
+                yield return new object[] { "PageNumber=1&PageSize=15&SortBy=Category" };
+                yield return new object[] { "PageNumber=1&PageSize=5&SortBy=Name" };
+                yield return new object[] { "PageNumber=1&PageSize=5&SortBy=Description" };
             }
         }
     }

@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using RestaurantAPI.Entities;
 using Microsoft.Extensions.DependencyInjection;
-using System.Data.Common;
-using Microsoft.EntityFrameworkCore.SqlServer.Storage.Internal;
 
 namespace RestaurantAPI_IntegrationTests
 {
@@ -23,9 +21,9 @@ namespace RestaurantAPI_IntegrationTests
 
                     services.AddMvc(o => o.Filters.Add(new FakeUserFilter()));
 
-                    services.AddDbContext<RestaurantDbContext>((container, options) =>
+                    services.AddDbContext<RestaurantDbContext>((options) =>
                     {
-                        options.UseSqlServer("RestaurantDb");
+                        options.UseInMemoryDatabase("RestaurantDb");
                     });
             });
 

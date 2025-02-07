@@ -18,10 +18,13 @@ namespace RestaurantAPI.Data
             if (_dbContext.Database.CanConnect())
             {
                 // update all not updated migrations
-                var pendingMigrations = _dbContext.Database.GetPendingMigrations();
-                if (pendingMigrations?.Any() is true)
-                {
-                    _dbContext.Database.Migrate();
+                if (_dbContext.Database.IsRelational())
+                { 
+                    var pendingMigrations = _dbContext.Database.GetPendingMigrations();
+                    if (pendingMigrations?.Any() is true)
+                    {
+                        _dbContext.Database.Migrate();
+                    }
                 }
 
                 if (!_dbContext.Restaurants.Any())
