@@ -1,8 +1,7 @@
-﻿
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
 using System.Security.Claims;
 
-namespace RestaurantAPI_IntegrationTests
+namespace RestaurantAPI_IntegrationTests.Fake
 {
     internal class FakeUserFilter : IAsyncActionFilter
     {

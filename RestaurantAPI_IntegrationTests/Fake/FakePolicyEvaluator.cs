@@ -1,11 +1,10 @@
-﻿using AutoMapper.Configuration.Annotations;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace RestaurantAPI_IntegrationTests
+namespace RestaurantAPI_IntegrationTests.Fake
 {
     internal class FakePolicyEvaluator : IPolicyEvaluator
     {
@@ -16,7 +15,7 @@ namespace RestaurantAPI_IntegrationTests
             claimsPrincipal.AddIdentity(new ClaimsIdentity(
                 new[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, "1"),
+                    new Claim(ClaimTypes.NameIdentifier, "77"),
                     new Claim(ClaimTypes.Role, "Admin")
                 }));
 

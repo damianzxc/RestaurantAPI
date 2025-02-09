@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using RestaurantAPI.Entities;
 using Microsoft.Extensions.DependencyInjection;
+using RestaurantAPI_IntegrationTests.Fake;
 
 namespace RestaurantAPI_IntegrationTests
 {
