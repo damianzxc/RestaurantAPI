@@ -35,7 +35,6 @@ namespace RestaurantAPI.Controllers
         }
 
 
-        // FromForm -> get data from form (client)
         [HttpPost]
         public ActionResult Upload([FromForm] IFormFile file)
         {
