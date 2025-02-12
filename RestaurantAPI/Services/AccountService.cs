@@ -84,7 +84,6 @@ namespace RestaurantAPI.Services
                 Email = dto.Email,
                 DateOfBirth = dto.DateOfBirth,
                 Nationality = dto.Nationality,
-                //PasswordHash = dto.Password,    //just now, leter we change it to hash obj
                 RoleId = dto.RoleId,
             };
 
