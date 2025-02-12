@@ -3,7 +3,7 @@ on:
   push:
     branches: main-pipeline
   pull_request:
-    branches: master-pipeline
+    branches: main-pipeline
   workflow_dispatch:
 
 jobs:
