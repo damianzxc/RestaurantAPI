@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace RestaurantAPI.Controllers
 {
-    [Route("api/restaurants")]
+    [Route("api/restaurants15")]
     [ApiController]  // Auto Validate instead of => ( ModelState.IsValid)
     [Authorize]
     public class RestaurantControler : ControllerBase
@@ -21,7 +21,6 @@ namespace RestaurantAPI.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        //[Authorize(Policy = "CreatedAtLeast2Restaurants")]
         public ActionResult<PagedResult<RestaurantDto>> GetAll([FromQuery]RestaurantQuery query)
         {
             var restaurantsDto = _restaurantService.GetAll(query);
