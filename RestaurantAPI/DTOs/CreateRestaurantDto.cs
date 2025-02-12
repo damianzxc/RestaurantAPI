@@ -4,7 +4,6 @@ namespace RestaurantAPI.DTOs
 {
     public class CreateRestaurantDto
     {
-        // Basic properties because for adding Dishes we will create another DTO
         [Required]
         [MaxLength(25)]
         public string Name { get; set; }

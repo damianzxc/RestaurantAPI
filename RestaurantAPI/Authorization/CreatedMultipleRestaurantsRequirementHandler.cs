@@ -13,14 +13,7 @@ namespace RestaurantAPI.Authorization
         }
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, CreatedMultipleRestaurantsRequirement requirement)
         {
-            //var userId = int.Parse(context.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
             int? userId = int.TryParse(context.User?.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value, out var v) ? v : null;
-
-            //if (userId is null)
-            //{
-            //    context.Fail();
-            //    return Task.CompletedTask;
-            //}
 
             var createdRestaurantsCount = _context
                 .Restaurants

@@ -9,7 +9,6 @@ namespace RestaurantAPI.Data
 
         public RestaurantSeeder(RestaurantDbContext dbContext)
         {
-            // Inject Db Context
             _dbContext = dbContext;
         }
 
@@ -17,7 +16,6 @@ namespace RestaurantAPI.Data
         {
             if (_dbContext.Database.CanConnect())
             {
-                // update all not updated migrations
                 if (_dbContext.Database.IsRelational())
                 { 
                     var pendingMigrations = _dbContext.Database.GetPendingMigrations();
