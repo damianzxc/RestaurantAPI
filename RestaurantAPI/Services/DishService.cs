@@ -21,7 +21,6 @@ namespace RestaurantAPI.Services
 
         public int Create(int restaurantId, CreateDishDto dto)
         {
-            // otherwise throw exception
             _ = GetRestaurantById(restaurantId);
 
             var dishEntity = _mapper.Map<Dish>(dto);
