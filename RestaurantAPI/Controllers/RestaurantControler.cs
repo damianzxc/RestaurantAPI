@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace RestaurantAPI.Controllers
 {
-    [Route("api/restaurants15")]
+    [Route("api/restaurants")]
     [ApiController]  // Auto Validate instead of => ( ModelState.IsValid)
     [Authorize]
     public class RestaurantControler : ControllerBase
